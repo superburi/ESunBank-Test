@@ -1,0 +1,36 @@
+
+CREATE DATABASE IF NOT EXISTS ESUNBANKTEST;
+USE ESUNBANKTEST;
+
+CREATE TABLE IF NOT EXISTS `User` ( # 使用者
+    user_id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+    phone_number VARCHAR(20) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    user_name VARCHAR(20) NOT NULL,
+    registration_time DATETIME NOT NULL,
+    last_login_time DATETIME
+);
+
+CREATE TABLE IF NOT EXISTS Book ( # 書籍
+    isbn VARCHAR(20) NOT NULL PRIMARY KEY,
+    name VARCHAR(255),
+    author VARCHAR(30),
+    introduction TEXT
+);
+
+CREATE TABLE IF NOT EXISTS Inventory ( # 庫存
+    inventory_id INT AUTO_INCREMENT PRIMARY KEY ,
+    isbn VARCHAR(20) NOT NULL,
+    store_time DATETIME,
+    status TINYINT, # 0 (在庫) 1 (出借中) 2 (整理中包含歸還後未入庫) 3 (遺失) 4 (損毀) 5 (廢棄)
+    CONSTRAINT FK_Inventory_isbn FOREIGN KEY(isbn) REFERENCES Book(isbn)
+);
+
+CREATE TABLE IF NOT EXISTS BorrowingRecord ( # 借閱紀錄
+    user_id INT NOT NULL ,
+    inventory_id INT NOT NULL ,
+    borrowing_time DATETIME NOT NULL ,
+    return_time DATETIME,
+    CONSTRAINT FK_BorrowingRecord_inventoryId FOREIGN KEY (inventory_id) REFERENCES Inventory(inventory_id),
+    CONSTRAINT FK_BorrowingRecord_userId FOREIGN KEY (user_id) REFERENCES User(user_id)
+);
