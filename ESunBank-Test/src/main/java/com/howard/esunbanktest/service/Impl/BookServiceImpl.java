@@ -5,6 +5,7 @@ import com.howard.esunbanktest.dto.Book;
 import com.howard.esunbanktest.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -39,13 +40,5 @@ public class BookServiceImpl implements BookService {
         return bookList;
 
     } // getBooks end
-
-    @Override
-    public Timestamp borrowBook(Integer user_id, String isbn) {
-
-        Map<String, Object> result = bookRepository.borrowBook(user_id, isbn);
-        return ( Timestamp ) result.get("borrowing_time_out");
-
-    } // borrowBook end
 
 } // BookServiceImpl end
