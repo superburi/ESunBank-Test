@@ -1,6 +1,7 @@
 package com.howard.esunbanktest.service;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 public interface LoanService {
 
@@ -19,5 +20,7 @@ public interface LoanService {
      * @return 還書的時間
      */
     public Timestamp returnBook(Integer user_id, String isbn);
+
+    public List<String> getBorrowedBooks(Integer user_id);
 
 }

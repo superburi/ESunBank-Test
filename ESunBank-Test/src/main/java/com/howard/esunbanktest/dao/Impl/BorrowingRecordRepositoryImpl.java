@@ -46,5 +46,17 @@ public class BorrowingRecordRepositoryImpl implements BorrowingRecordRepository 
 
     } // addBorrowingRecord end
 
+    @Override
+    public Map<String, Object> getBorrowedBooks(Integer user_id) {
+
+        SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
+                .withProcedureName("getBorrowedBooks");
+
+        Map<String, Object> inParams = new HashMap<String, Object>();
+        inParams.put("user_id_in", user_id);
+        return simpleJdbcCall.execute(inParams);
+
+    } // getBorrowedBooks end
+
 
 } // borrowingRecordRepositoryImpl end

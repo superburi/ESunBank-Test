@@ -9,4 +9,6 @@ public interface BorrowingRecordRepository {
 
     public Map<String, Object> updateBorrowingRecord(Integer user_id, String isbn);
 
+    public Map<String, Object> getBorrowedBooks(Integer user_id);
+
 }

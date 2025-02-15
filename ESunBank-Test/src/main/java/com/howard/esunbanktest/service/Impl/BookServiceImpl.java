@@ -41,4 +41,18 @@ public class BookServiceImpl implements BookService {
 
     } // getBooks end
 
+    @Override
+    public Book getBookById(String isbn) {
+
+        Map<String, Object> result = bookRepository.getBookByID(isbn);
+        Book book = new Book();
+        book.setIsbn( ( String ) result.get("isbn") );
+        book.setName( ( String ) result.get("name") );
+        book.setAuthor( ( String ) result.get("author") );
+        book.setIntroduction( ( String ) result.get("introduction") );
+        book.setStatus( ( Integer ) result.get("status") );
+        return book;
+
+    }
+
 } // BookServiceImpl end

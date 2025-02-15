@@ -1,0 +1,198 @@
+
+####################### 插入假資料 start #######################
+
+INSERT INTO `User` (phone_number, password, user_name, registration_time, last_login_time)
+VALUES
+    ('0923561207', '19991207', '測試1', '2025-02-13 23:58:00', NULL);
+
+INSERT INTO Book (isbn, name, author, introduction)
+VALUES
+    ('19700821', 'EricBook', 'EricChang', '這是 Eric 寫的書'),
+    ('19750228', 'VickyBook', 'VickyLin', '這是 Vicky 寫的書'),
+    ('20080617', 'AndyBook', 'AndyChang', '這是 Andy 寫的書'),
+    ('20020520', 'RouBook', 'RouKuo', '這是 Rou 寫的書'),
+    ('19991207', 'HowardBook', 'HowardChang', '這是 Howard 寫的書');
+
+INSERT INTO Inventory (isbn, store_time, status)
+VALUES
+    ('19700821', '2025-02-13 23:58:00', '0'),
+    ('19750228', '2025-02-13 23:58:00', '1'),
+    ('20080617', '2025-02-13 23:58:00', '2'),
+    ('20020520', '2025-02-13 23:58:00', '3'),
+    ('19991207', '2025-02-13 23:58:00', '4');
+
+INSERT INTO BorrowingRecord (user_id, inventory_id, borrowing_time, return_time)
+VALUES
+    ('1', '1', '2025-02-13 23:58:00', NULL);
+
+####################### 插入假資料 end #######################
+
+####################### stored procedure 相關 start #######################
+
+############### 註冊使用者 start ###############
+DELIMITER $$
+CREATE PROCEDURE IF NOT EXISTS registerUser(
+    IN phone_number_in VARCHAR(20),
+    IN password_in     VARCHAR(100),
+    IN user_name_in    VARCHAR(20),
+    OUT result      INT
+)
+BEGIN
+    DECLARE existingCount INT;
+
+    SELECT user_id INTO existingCount
+    FROM `User`
+    WHERE phone_number = phone_number_in;
+
+    IF existingCount > 0 THEN
+        SET result = -1; -- 表示使用者已註冊
+    ELSE
+        INSERT INTO `User` (phone_number, password, user_name, registration_time, last_login_time)
+        VALUES (phone_number_in, password_in, user_name_in,NOW(), NULL);
+        SET result = 1;
+    end if ;
+end $$
+DELIMITER ;
+############### 註冊使用者 end ###############
+
+############### 查詢所有書本資料 start ###############
+DELIMITER $$
+
+CREATE PROCEDURE IF NOT EXISTS getBooks()
+BEGIN
+    SELECT
+        b.name,
+        b.isbn,
+        b.author,
+        b.introduction,
+        i.status
+    FROM Book b
+    LEFT JOIN Inventory i
+    ON b.isbn = i.isbn;
+end $$
+
+DELIMITER ;
+############### 查詢所有書本資料 end ###############
+
+############### 更新書籍狀態 start ###############
+DELIMITER $$
+
+CREATE PROCEDURE updateStatus(
+    IN isbn_in VARCHAR(20),
+    IN status_in INT
+)
+BEGIN
+    UPDATE Inventory
+    SET status = status_in
+    WHERE isbn = isbn_in;
+end $$
+
+DELIMITER ;
+############### 更新書籍狀態 end ###############
+
+############### 新增借閱紀錄 start ###############
+DELIMITER $$
+
+CREATE PROCEDURE addBorrowingRecord(
+    IN user_id_in INT,
+    IN isbn_in VARCHAR(20),
+    OUT borrowing_time_out DATETIME
+)
+BEGIN
+    DECLARE inventory_id_in INT;
+    DECLARE borrowing_time_in DATETIME;
+    SET borrowing_time_in = NOW();
+
+    SELECT inventory_id INTO inventory_id_in
+    FROM Inventory
+    WHERE isbn = isbn_in;
+
+    INSERT INTO BorrowingRecord (user_id, inventory_id, borrowing_time, return_time)
+    VALUES(
+           user_id_in,
+           inventory_id_in,
+           borrowing_time_in,
+           NULL
+          );
+
+    SET borrowing_time_out = borrowing_time_in;
+end $$
+
+DELIMITER ;
+############### 新增借閱紀錄 end ###############
+
+############### 更新借閱紀錄 start ###############
+DELIMITER $$
+
+CREATE PROCEDURE updateBorrowingRecord(
+    IN user_id_in INT,
+    IN isbn_in VARCHAR(20),
+    OUT return_time_out DATETIME
+)
+BEGIN
+    DECLARE inventory_id_in INT;
+    DECLARE return_time_in DATETIME;
+    SET return_time_in = NOW();
+    # 找出庫存 ID
+    SELECT inventory_id INTO inventory_id_in
+    FROM Inventory
+    WHERE isbn = isbn_in;
+    # 更新歸還時間
+    UPDATE BorrowingRecord
+    SET return_time = return_time_in
+    WHERE inventory_id = inventory_id_in;
+
+    SET return_time_out = return_time_in;
+end $$
+
+DELIMITER ;
+############### 更新借閱紀錄 end ###############
+
+############### 查詢 user start ###############
+DELIMITER $$
+
+CREATE PROCEDURE findUserByPhoneNumber(
+    IN phone_number_in VARCHAR(20)
+)
+BEGIN
+    SELECT user_id, phone_number, password, user_name, registration_time, last_login_time
+    FROM User
+    WHERE phone_number = phone_number_in;
+end $$
+
+DELIMITER $$
+############### 查詢 user end ###############
+
+############### 查詢一本書 start ###############
+DELIMITER $$
+
+CREATE PROCEDURE getBookById(
+    IN isbn_in VARCHAR(20)
+)
+BEGIN
+    SELECT b.isbn, b.name, b.author, b.introduction, i.status
+    FROM Book b
+    LEFT JOIN Inventory i
+    ON b.isbn = i.isbn
+    WHERE b.isbn = isbn_in;
+end $$
+
+DELIMITER $$
+############### 查詢一本書 end ###############
+
+############### 查詢一本書 end ###############
+DELIMITER $$
+CREATE PROCEDURE getBorrowedBooks(
+    IN user_id_in INT
+)
+BEGIN
+    SELECT i.isbn
+    FROM BorrowingRecord b
+             JOIN Inventory i ON b.inventory_id = i.inventory_id
+    WHERE b.user_id = user_id_in
+      AND b.return_time IS NULL;  -- 還沒還書
+END$$
+DELIMITER ;
+############### 查詢一本書 end ###############
+
+####################### stored procedure 相關 end #######################

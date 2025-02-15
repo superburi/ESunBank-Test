@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -38,6 +40,19 @@ public class LoanServiceImpl implements LoanService {
         // 更新歸還時間
         Map<String, Object> result = borrowingRecordRepository.updateBorrowingRecord(user_id, isbn);
         return ( Timestamp ) result.get("return_time");
+    }
+
+    @Override
+    public List<String> getBorrowedBooks(Integer user_id) {
+
+        Map<String, Object> result = borrowingRecordRepository.getBorrowedBooks(user_id);
+        List<Map<String, Object>> borrowedBooks = (List<Map<String, Object>>) result.get("#result-set-1");
+        List<String> books = new ArrayList<String>();
+        for (Map<String, Object> book : borrowedBooks) {
+            books.add((String) book.get("isbn"));
+        }
+        return books;
+
     }
 
 }
