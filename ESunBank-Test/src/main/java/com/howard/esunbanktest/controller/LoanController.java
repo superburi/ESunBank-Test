@@ -1,6 +1,7 @@
 package com.howard.esunbanktest.controller;
 
 import com.howard.esunbanktest.service.Impl.LoanServiceImpl;
+import com.howard.esunbanktest.service.LoanService;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,7 +17,7 @@ import java.sql.Timestamp;
 public class LoanController {
 
     @Autowired
-    private LoanServiceImpl loanServiceImpl;
+    private LoanService loanServiceImpl;
 
     @PostMapping("/users/{userid}/books/{isbn}/borrow")
     public ResponseEntity<Timestamp> borrowBook(@PathVariable @NotNull Integer userid,

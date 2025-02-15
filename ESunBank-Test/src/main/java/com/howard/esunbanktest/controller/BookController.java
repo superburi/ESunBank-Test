@@ -1,6 +1,7 @@
 package com.howard.esunbanktest.controller;
 
 import com.howard.esunbanktest.dto.Book;
+import com.howard.esunbanktest.service.BookService;
 import com.howard.esunbanktest.service.Impl.BookServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,7 +17,7 @@ import java.util.List;
 public class BookController {
 
     @Autowired
-    private BookServiceImpl bookService;
+    private BookService bookService;
 
     @GetMapping("/books")
     public ResponseEntity<List<Book>> getBooks() {

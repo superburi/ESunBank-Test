@@ -1,7 +1,5 @@
 package com.howard.esunbanktest.dto;
 
-import com.howard.esunbanktest.util.RegisterUserResult;
-
 public class RegisterResponse {
 
     int returnCode;

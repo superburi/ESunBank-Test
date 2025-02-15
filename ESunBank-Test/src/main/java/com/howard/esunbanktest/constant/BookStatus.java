@@ -1,4 +1,4 @@
-package com.howard.esunbanktest.util;
+package com.howard.esunbanktest.constant;
 
 public enum BookStatus {
 
