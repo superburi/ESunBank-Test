@@ -13,6 +13,6 @@ public interface BookService {
      */
     public List<Book> getBooks();
 
-
+    public Book getBookById(String isbn);
 
 }

@@ -2,6 +2,7 @@ package com.howard.esunbanktest.model;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class User {
 
@@ -11,6 +12,7 @@ public class User {
     private String user_name;
     private LocalDateTime registration_time;
     private LocalDateTime last_login_time;
+    private List<String> loanedBooks;
 
     public Integer getUser_id() {
         return user_id;
@@ -58,6 +60,14 @@ public class User {
 
     public void setLast_login_time(LocalDateTime last_login_time) {
         this.last_login_time = last_login_time;
+    }
+
+    public List<String> getLoanedBooks() {
+        return loanedBooks;
+    }
+
+    public void setLoanedBooks(List<String> loanedBooks) {
+        this.loanedBooks = loanedBooks;
     }
 
 }
