@@ -1,10 +1,9 @@
 package com.howard.esunbanktest.service.Impl;
 
 import com.howard.esunbanktest.dao.BorrowingRecordRepository;
-import com.howard.esunbanktest.dao.Impl.BorrowingRecordRepositoryImpl;
 import com.howard.esunbanktest.dao.InventoryRepository;
 import com.howard.esunbanktest.service.LoanService;
-import com.howard.esunbanktest.util.BookStatus;
+import com.howard.esunbanktest.constant.BookStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
