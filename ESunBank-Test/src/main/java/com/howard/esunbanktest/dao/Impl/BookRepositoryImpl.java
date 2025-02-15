@@ -30,18 +30,6 @@ public class BookRepositoryImpl implements BookRepository {
 
     } // getBooks end
 
-    @Override
-    public Map<String, Object> borrowBook(Integer user_id, String isbn) {
 
-        SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
-                .withProcedureName("borrowBook");
-
-        Map<String, Object> inParams = new HashMap<String, Object>();
-        inParams.put("user_id_in", user_id);
-        inParams.put("isbn_in", isbn);
-
-        return simpleJdbcCall.execute(inParams);
-
-    } // borrowBook end
 
 } // BookRepositoryImpl end
